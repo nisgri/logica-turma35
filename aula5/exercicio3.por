@@ -1,12 +1,16 @@
 programa
 {
-	inclua biblioteca Util-->u	
-	const inteiro quant=50
+	inclua biblioteca Util -->u	
+	const inteiro quant =50
+	cadeia convidados[quant] inteiro opcao, posicao
 	
 	funcao inicio()
+	{						
+		menu()
+	}
+
+	funcao menu()
 	{
-		cadeia convidados[quant] inteiro opcao, posicao
-				
 		faca
 		{
 			limpa()
@@ -28,31 +32,23 @@ programa
 					pare
 				}
 				caso 1:
-				{
-					limpa()
-					escreva("\n Qual cadeira deseja reservar? ")
-					leia(posicao)
-					inserir(convidados,posicao)
+				{					
+					inserir()
 					pare
 				}
 				caso 2:
 				{
-					limpa()
-					listar(convidados)
+					listar()
 					pare
 				}
 				caso 3:
 				{
-					limpa()
-					escreva("\n Qual cadeira deseja liberar? ")
-					leia(posicao)
-					remover(convidados,posicao)
+					remover()
 					pare
 				}
 				caso 4:
 				{
-					limpa()
-					pagamento(convidados)
+					pagamento()
 					pare
 				}
 				caso contrario:
@@ -63,13 +59,21 @@ programa
 					pare
 				}
 			}
-		} enquanto(opcao!=0)
+		} enquanto(opcao !=0)
 	}
 
-	funcao inserir(cadeia vetor[],inteiro posicao)
+	funcao inserir()
 	{
+		limpa()
+		escreva(" Qual cadeira deseja reservar? (1-",quant,"): ")
+		leia(posicao)
+		enquanto(posicao <1 ou posicao >quant)
+		{
+			escreva("Digite um valor válido (1-",quant,"): ")
+			leia(posicao)
+		}
 		cadeia convidado
-		se(vetor[posicao-1]!="")
+		se(convidados[posicao -1] !="")
 		{
 			limpa()
 			escreva(" Cadeira já ocupada.")
@@ -77,75 +81,77 @@ programa
 		} senao {
 			escreva(" Qual o nome do convidado? ")
 			leia(convidado)
-			vetor[posicao-1]=convidado
+			convidados[posicao -1] =convidado
 			limpa()
 			escreva(" Convidado adicionado com sucesso.")
 			u.aguarde(1000)
 		}
 	}
 
-	funcao listar(cadeia vetor[])
+	funcao listar()
 	{
-		inteiro cont=0
-		para(inteiro i=0;i<quant;i++)
+		limpa()
+		inteiro cont =0
+		para(inteiro i =0;i <quant;i++)
 		{
-			se(vetor[i]=="")
+			se(convidados[i] =="")
 			{
 				cont++
 			}
 		}
-		se(cont==quant)
+		se(cont ==quant)
 		{
 			escreva("A lista de convidados está vazia.")
 			u.aguarde(1000)
 		} senao {
-			escreva("Lista de convidados:\n")
-			para(inteiro i=0;i<quant;i++)
+			escreva("Lista de convidados:\n\n")
+			para(inteiro i =0;i <quant;i++)
 			{
-				escreva(vetor[i]," está na cadeira ",i+1)
+				se(convidados[i] !="")
+				{
+					escreva(convidados[i]," está na cadeira ",i +1,"\n")
+				}
 			}
 			u.aguarde(5000)
 		}
 	}
 
-	funcao remover(cadeia vetor[],inteiro posicao)
+	funcao remover()
 	{
-		se(vetor[posicao-1]=="")
+		limpa()
+		escreva(" Qual cadeira deseja liberar? (1-",quant,"): ")
+		leia(posicao)
+		enquanto(posicao <1 ou posicao >quant)
+		{
+			escreva("Digite um valor válido (1-",quant,"): ")
+			leia(posicao)
+		}
+		se(convidados[posicao -1] =="")
 		{
 			limpa()
 			escreva(" Convidado já removido/Não há nenhum nessa cadeira.")
 			u.aguarde(1000)
 		} senao {
 			limpa()
-			vetor[posicao-1]=""
+			convidados[posicao -1] =""
 			escreva(" Convidado removido com sucesso.")
 			u.aguarde(1000)
 		}
 	}
 
-	funcao pagamento(cadeia vetor[])
+	funcao pagamento()
 	{
-		inteiro cont=0
-		para(inteiro i=0;i<quant;i++)
+		limpa()
+		inteiro cont =0
+		para(inteiro i =0;i <quant;i++)
 		{
-			se(vetor[i]!="")
+			se(convidados[i] !="")
 			{
 				cont++
 			}
 		}
 		escreva(" Existe(m) ",cont," convidado(s) no total.\n")
-		escreva(" O valor total dos ingressos é R$",cont*120.0,"\n")
+		escreva(" O valor total dos ingressos é R$",cont *120.0,"\n")
 		u.aguarde(5000)
 	}
 }
-/* $$$ Portugol Studio $$$ 
- * 
- * Esta seção do arquivo guarda informações do Portugol Studio.
- * Você pode apagá-la se estiver utilizando outro editor.
- * 
- * @POSICAO-CURSOR = 1046; 
- * @PONTOS-DE-PARADA = ;
- * @SIMBOLOS-INSPECIONADOS = ;
- * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
- * @FILTRO-ARVORE-TIPOS-DE-SIMBOLO = variavel, vetor, matriz, funcao;
- */
