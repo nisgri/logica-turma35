@@ -1,7 +1,9 @@
+//CÓDIGO REFERENTE AO GRUPO 5 DA TURMA 35
+
 programa
 {
-	inclua biblioteca Util--> u
-	inteiro hotel[8][16],andar= 0,quarto= 0,ocupados= 0
+	inclua biblioteca Util--> u
+	inteiro hotel[8][15],andar= 0,quarto= 0,ocupados= 0
 	
 	funcao inicio()
 	{
@@ -31,108 +33,126 @@ programa
 	{		
 		limpa()
 		listar()
-		inteiro validador= 0
+		logico validador= falso
 		escreva("*Digite um valor negativo abaixo para parar o programa*\n")
-		escreva("Em qual andar pretende reservar um quarto? (1-8) ")
+		escreva("Em qual andar pretende reservar um quarto? (1-8): ")
 		leia(andar)
-		
 		se(andar< 0)
 		{
 			limpa()
-			escreva("Saindo...")
+			escreva("Número negativo digitado. Saindo...")
+      		u.aguarde(1000)
 		} senao {		
-			se(andar< 1 ou andar> 8)
+			validador= andarizacao(andar- 1)
+			se(validador!= verdadeiro)
 			{
-				enquanto(andar< 1 ou andar> 8)
-				{
-					limpa()
-					escreva("Erro! Andar inválido. Informe outro no intervalo 1-8: ")
-					u.aguarde(1000)
-					leia(andar)
-				}
+				validador= verificacao(8,'a')
 			}
-			
 			andar--
-			validador= andarizador(andar)
-				
-			se(validador!= -1)
-			{
-				enquanto(andar== validador ou (andar< 0 ou andar> 7))
-				{
-						limpa()
-						vazios(0,'a')
-						escreva("Erro! Andar ",validador+ 1," lotado (ou inválido). Informe outro: ")
-						leia(andar)
-						andar--
-				}
-			}
-				
-			limpa()
-			escreva("E qual o quarto? ")
-			leia(quarto)
 			
-			se(quarto< 1 ou quarto> 15)
+			se(andar< 0)
 			{
-				enquanto(quarto< 1 ou quarto> 15)
+				limpa()
+				escreva("Número negativo digitado. Saindo...")
+	      		u.aguarde(1000)
+			} senao {
+				limpa()
+				escreva("E qual o quarto? ")
+				leia(quarto)
+				validador= quartizacao(andar,quarto- 1)
+				se(validador!= verdadeiro)
 				{
-					limpa()
-					escreva("Erro! Quarto inválido. Informe outro no intervalo 1-15: ")
-					u.aguarde(1000)
-					leia(quarto)
+					validador= verificacao(15,'q')
 				}
-			}
-			
-			quarto--
-			validador= quartizador(andar,quarto)
+				quarto--
 				
-			se(validador!= -1)
-			{
-				enquanto(quarto== validador ou (quarto< 0 ou quarto> 14))
-				{
-						limpa()
-						vazios(andar,'q')
-						escreva("Erro! Quarto ",validador+ 1," ocupado (ou inválido). Informe outro: ")
-						leia(quarto)
-						quarto--
-				}
+				hotel[andar][quarto]= 1
+				ocupados++
+				limpa()
+				escreva("Reserva realizada com sucesso.\n")
+				u.aguarde(1000)
 			}
-				
-			hotel[andar][quarto]= 1
-			ocupados++
-			limpa()
-			escreva("Reserva realizada com sucesso.\n")
-			u.aguarde(1000)
 		}
 	}
 
-	funcao inteiro andarizador(inteiro a)
-	{				
-		inteiro cont= 0
+	funcao logico verificacao(inteiro x, caracter c)
+	{
+		logico validador= falso
 		
-		para(inteiro q= 0;q< 15;q++)
+		se(c== 'a')
 		{
+			enquanto(validador!= verdadeiro ou (andar== 0 ou andar> x))
+			{
+					limpa()
+					vazios(0,'a')
+					escreva("*Digite um valor negativo abaixo para parar o programa*\n")
+					escreva("Erro! Andar '",andar,"' lotado (ou inválido). Digite outro: ")
+					leia(andar)
+					se(andar< 0)
+					{
+						validador= verdadeiro
+					} senao se (andar>= 1 e andar<= x){
+						validador= andarizacao(andar- 1)
+					} senao {
+						validador= falso
+					}
+			}
+		} senao {
+			enquanto(validador!= verdadeiro ou (quarto< 1 ou quarto> x))
+			{
+					limpa()
+					vazios(andar,'q')
+					escreva("Erro! Quarto '",quarto,"' ocupado (ou inválido). Digite outro: ")
+					leia(quarto)
+					se(quarto>= 1 e quarto<= 15)
+					{
+						validador= quartizacao(andar,quarto- 1)
+					} senao {
+						validador= falso
+					}
+			}
+		}
+		
+		retorne verdadeiro
+	}
+
+	funcao logico andarizacao(inteiro a)
+	{				
+		se(a< 0 ou a> 7)
+		{
+			retorne falso
+		} senao {
+			inteiro cont= 0
+		
+			para(inteiro q= 0;q< 15;q++)
+			{
+				se(hotel[a][q]== 1)
+				{
+					cont++
+				}
+			}
+	
+			se(cont== 15)
+			{
+				retorne falso
+			} senao {
+				retorne verdadeiro
+			}
+		}
+	}
+
+	funcao logico quartizacao(inteiro a,inteiro q)
+	{
+		se(q< 0 ou q> 14)
+		{
+			retorne falso
+		} senao {
 			se(hotel[a][q]== 1)
 			{
-				cont++
+				retorne falso
+			} senao {
+				retorne verdadeiro
 			}
-		}
-
-		se(cont== 15)
-		{
-			hotel[a][15]= 1
-			retorne a
-		} senao {
-			retorne -1
-		}
-	}
-
-	funcao inteiro quartizador(inteiro a,inteiro q)
-	{
-		se(hotel[a][q]== 1)
-		{
-			retorne q
-		} senao {
-			retorne -1
 		}
 	}
 
@@ -143,10 +163,12 @@ programa
 		para(inteiro a= 7;a>= 0;a--)
 		{
 			escreva((a+ 1),"° andar - ")
+			
 			para(inteiro q= 0;q< 15; q++)
 			{
 				escreva(hotel[a][q]," ")
 			}
+			
 			escreva("\n")
 		}
 
@@ -163,19 +185,34 @@ programa
 
 	funcao vazios(inteiro x,caracter opcao)
 	{
-		se(opcao== 'a')
+		inteiro cont= 0
+    
+    		se(opcao== 'a')
 		{
 			escreva("Andares vagos: \n")
+			
 			para(inteiro a= 0;a< 8;a++)
 			{
-				se(hotel[a][15]== 0)
-				{
-					escreva(a+1," ")
-				}
+				para(inteiro q= 0;q< 15;q++)
+        			{
+          			se(hotel[a][q]== 0)
+				  	{
+					  cont++
+				  	}
+        			}
+        		
+        			se(cont> 0)
+        			{
+          			escreva(a+1," ")
+        			}
+
+        			cont= 0        			
 			}
-			escreva("\n")
+
+			escreva("\n\n")		
 		} senao {
 			escreva("Quartos vagos: \n")
+			
 			para(inteiro q= 0;q< 15;q++)
 			{
 				se(hotel[x][q]== 0)
@@ -183,7 +220,8 @@ programa
 					escreva(q+1," ")
 				}
 			}
-			escreva("\n")
+			
+			escreva("\n\n")
 		}
 		
 	}
@@ -193,7 +231,7 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 2882; 
+ * @POSICAO-CURSOR = 3771; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
